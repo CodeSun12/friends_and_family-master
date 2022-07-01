@@ -14,7 +14,7 @@ import 'auth/login_screen.dart';
 
 class CartScreen extends StatefulWidget {
   var token;
-  CartScreen({this.token});
+  CartScreen({Key? key, this.token}) : super(key: key);
 
   @override
   _CartScreenState createState() => _CartScreenState();
@@ -42,13 +42,18 @@ class CartScreen extends StatefulWidget {
 // }
 
 class _CartScreenState extends State<CartScreen> {
+
+  Icon cusIcon = const Icon(Icons.search);
+  Widget cusSearchBar = const Text("Product List");
+
+
+
+
   DBHelper? dbHelper = DBHelper();
-
   var data;
-
   Future<void> getPostApi() async {
     final response = await http.get(
-      Uri.parse('http://192.168.1.9:8000/api/products/'),
+      Uri.parse('http://192.168.1.19:8000/api/products/'),
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
         'Accept': 'application/json',
@@ -58,9 +63,11 @@ class _CartScreenState extends State<CartScreen> {
     data = jsonDecode(response.body);
     if (response.statusCode == 200) {
       print("Successfully Get Data");
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Successfully Get Data")));
       print(data);
     } else {
       print("Failed");
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Failed Operation")));
     }
     return data;
   }
@@ -70,17 +77,32 @@ class _CartScreenState extends State<CartScreen> {
     final cart = Provider.of<CartProvider>(context);
     return Scaffold(
         backgroundColor: Colors.grey.shade200,
-        drawer: MyDrawer(),
+        drawer: const MyDrawer(),
         appBar: AppBar(
           backgroundColor: Colors.deepPurple,
-          title: const Center(child: Text("Product List")),
+          title: cusSearchBar,
           actions: [
             IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.search,
-                size: 25,
-              ),
+              onPressed: () {
+                setState(() {
+                  if(this.cusIcon.icon == Icons.search){
+                    this.cusIcon = const Icon(Icons.cancel_outlined);
+                    this.cusSearchBar = const TextField(
+                      textInputAction: TextInputAction.go,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: "Search Product",
+                        hintStyle: TextStyle(color: Colors.white70, fontWeight: FontWeight.w500),
+                      ),
+                      style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w600),
+                    );
+                  }else{
+                    this.cusIcon = const Icon(Icons.search);
+                    this.cusSearchBar = const Text("Product List");
+                  }
+                });
+              },
+              icon: cusIcon
             ),
             const SizedBox(
               width: 5.0,
@@ -88,7 +110,7 @@ class _CartScreenState extends State<CartScreen> {
             InkWell(
               onTap: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => CheckoutScreen()));
+                    MaterialPageRoute(builder: (context) => const CheckoutScreen()));
               },
               child: Center(
                 child: Badge(
@@ -100,8 +122,8 @@ class _CartScreenState extends State<CartScreen> {
                     },
                   ),
                   animationType: BadgeAnimationType.fade,
-                  animationDuration: Duration(milliseconds: 300),
-                  child: Icon(Icons.shopping_bag_outlined),
+                  animationDuration: const Duration(milliseconds: 300),
+                  child: const Icon(Icons.shopping_bag_outlined),
                 ),
               ),
             ),
@@ -114,7 +136,7 @@ class _CartScreenState extends State<CartScreen> {
                 onPressed: () {
                   Constants.preferences!.setBool("loggedIn", false);
                   Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (ctx) => SignInScreen()));
+                      MaterialPageRoute(builder: (ctx) => const SignInScreen()));
                 },
                 icon: const Icon(
                   Icons.logout,
@@ -234,7 +256,7 @@ class _CartScreenState extends State<CartScreen> {
                                               data[index]['price'].toString()));
                                           cart.addCounter();
 
-                                          final snackBar =  SnackBar(
+                                          var snackBar =  const SnackBar(
                                             backgroundColor: Colors.green,
                                             content: Text(
                                                 'Product is added to cart'),
@@ -245,7 +267,8 @@ class _CartScreenState extends State<CartScreen> {
                                               .showSnackBar(snackBar);
                                         }).onError((error, stackTrace) {
                                           print("error" + error.toString());
-                                          final snackBar =  SnackBar(
+
+                                          var snackBar =  const SnackBar(
                                               backgroundColor: Colors.red,
                                               content: Text(
                                                   'Product is already added in cart'),

@@ -15,6 +15,7 @@ class SignInScreen extends StatefulWidget {
   _SignInScreenState createState() => _SignInScreenState();
 }
 
+// 'http://192.168.1.9:8000/api/login/'
 
 class _SignInScreenState extends State<SignInScreen> {
 
@@ -23,11 +24,10 @@ class _SignInScreenState extends State<SignInScreen> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   bool isLoading = false;
-
   login(String username, password)async{
     try{
       var response = await post(
-          Uri.parse('http://192.168.1.9:8000/api/login/'),
+          Uri.parse('http://192.168.1.19:8000/api/login/'),
           body: {
             "username": username,
             "password": password,

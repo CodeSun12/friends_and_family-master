@@ -56,18 +56,15 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         alignment: Alignment.center,
                         child: Column(
                           children: [
-                            // const Image(
-                            //   image: AssetImage('images/empty_cart.png'),
-                            // ),
                             const SizedBox(height: 20,),
                             Text('Your cart is empty 😌' ,style: Theme.of(context).textTheme.headline5),
                             const SizedBox(height: 20,),
                             Text('Explore products and shop your\nfavourite items' , textAlign: TextAlign.center ,style: Theme.of(context).textTheme.subtitle2)
-
                           ],
                         ),
                       );
-                    }else {
+                    }
+                    else {
                       return Expanded(
                         child: ListView.builder(
                             itemCount: snapshot.data!.length,
@@ -93,6 +90,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                                 Row(
                                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                   children: [
+                                                    Text(snapshot.data![index].id.toString() ,
+                                                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                                                    ),
                                                     Text(snapshot.data![index].productName.toString() ,
                                                       style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                                                     ),
@@ -101,6 +101,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                                           dbHelper!.delete(snapshot.data![index].id!);
                                                           cart.removerCounter();
                                                           cart.removeTotalPrice(double.parse(snapshot.data![index].initialPrice.toString()));
+                                                          cart.removeFinalTotalPrice();
                                                         },
                                                         child: const Icon(Icons.delete))
                                                   ],
@@ -223,26 +224,31 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               );
             }),
             const SizedBox(height: 20,),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 60.0),
-              child: Container(
-                height: 45,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12.0),
-                  gradient: const LinearGradient(
-                      colors: [
-                        Color(0XFF6A62B7),
-                        Colors.deepPurple
-                      ]
+            InkWell(
+              onTap: (){
+
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 60.0),
+                child: Container(
+                  height: 45,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12.0),
+                    gradient: const LinearGradient(
+                        colors: [
+                          Color(0XFF6A62B7),
+                          Colors.deepPurple
+                        ]
+                    ),
                   ),
-                ),
-                child: const Center(
-                  child: Text(
-                    "Order Confirm",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16
+                  child: const Center(
+                    child: Text(
+                      "Order Confirm",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16
+                      ),
                     ),
                   ),
                 ),

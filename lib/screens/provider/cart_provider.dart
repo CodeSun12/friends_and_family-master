@@ -66,6 +66,11 @@ class CartProvider with ChangeNotifier {
     return bill;
   }
 
+  double removeFinalTotalPrice(){
+    var myBill = bill - bill;
+    return myBill;
+  }
+
   double getTotalBill(){
     _getPrefItems();
     return _totalPrice - bill;
